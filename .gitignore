@@ -1,0 +1,145 @@
+# compiled output
+/dist
+/node_modules
+/build
+/docs
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+
+# Tests
+/coverage
+/.nyc_output
+*.spec.ts
+!src/**/*.spec.ts
+*.spec.js
+/test
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+*.env
+
+# temp directory
+.temp
+.tmp
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# TypeScript cache & incremental build
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+.eslintcache
+
+# Yarn
+.yarn-integrity
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+._*
+
+# Docker
+docker-compose.override.yml
+
+# Secrets & keys - QUAN TRỌNG
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+data/
+
+# Uploads & media
+uploads/
+public/uploads/
+
+# Debug & profiling
+*.cpuprofile
+*.heapprofile
+*.heapsnapshot
+chrome-devtools-profile-*
+
+# Sentry
+.sentryclirc
+
+# Gemini / AI
+.gemini/
+
+# Misc
+*.swp
+*.swo
+*~
+*.bak
+*.orig
+
+# Python sidecar — local venv + generated artifacts (not committed)
+.venv-sidecar/
+sidecar/__pycache__/
+sidecar/artifacts/
+__pycache__/
+*.pyc
+
+# Local design / reference docs (kept locally, not committed)
+*.docx
+
+
+docs/
+
+plans/
+
+backups/
+
+.codegraph/
