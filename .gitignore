@@ -1,6 +1,8 @@
 # compiled output
 /dist
+dist/
 /node_modules
+node_modules/
 /build
 /docs
 # Logs
@@ -20,6 +22,7 @@ lerna-debug.log*
 /.nyc_output
 *.spec.ts
 !src/**/*.spec.ts
+!apps/api/test/**/*.spec.ts
 *.spec.js
 /test
 
