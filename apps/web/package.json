@@ -1,0 +1,8 @@
+{
+  "name": "@doclens/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "typecheck": "tsc --project tsconfig.app.json"
+  }
+}
