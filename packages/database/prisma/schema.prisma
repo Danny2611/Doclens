@@ -1,1 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
 
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DocumentStatus {
+  UPLOADED
+  QUEUED
+  EXTRACTING
+  CHUNKING
+  SUMMARIZING
+  COMPLETED
+  FAILED
+}
+
+enum ProcessingRunStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum ProcessingStage {
+  QUEUED
+  EXTRACTING
+  CHUNKING
+  SUMMARIZING
+  COMPLETED
+}
+
+model Document {
+  id             String          @id @default(uuid()) @db.Uuid
+  originalName   String          @map("original_name")
+  mimeType       String          @map("mime_type")
+  fileSize       BigInt          @map("file_size")
+  storageKey     String          @unique @map("storage_key")
+  status         DocumentStatus  @default(UPLOADED)
+  pageCount      Int?            @map("page_count")
+  language       String?
+  errorCode      String?         @map("error_code")
+  errorMessage   String?         @map("error_message")
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime        @updatedAt @map("updated_at") @db.Timestamptz(3)
+  processingRuns ProcessingRun[]
+
+  @@map("documents")
+  @@index([status, createdAt], map: "documents_status_created_at_idx")
+  @@index([createdAt], map: "documents_created_at_idx")
+}
+
+model ProcessingRun {
+  id           String              @id @default(uuid()) @db.Uuid
+  documentId   String              @map("document_id") @db.Uuid
+  attempt      Int                 @default(1)
+  status       ProcessingRunStatus @default(PENDING)
+  stage        ProcessingStage     @default(QUEUED)
+  startedAt    DateTime?           @map("started_at") @db.Timestamptz(3)
+  completedAt  DateTime?           @map("completed_at") @db.Timestamptz(3)
+  durationMs   Int?                @map("duration_ms")
+  errorCode    String?             @map("error_code")
+  errorMessage String?             @map("error_message")
+  createdAt    DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt    DateTime            @updatedAt @map("updated_at") @db.Timestamptz(3)
+  document     Document            @relation(fields: [documentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("processing_runs")
+  @@unique([documentId, attempt], map: "processing_runs_document_id_attempt_key")
+  @@index([documentId, status], map: "processing_runs_document_id_status_idx")
+  @@index([status, createdAt], map: "processing_runs_status_created_at_idx")
+}
