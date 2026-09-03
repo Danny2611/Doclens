@@ -8,6 +8,7 @@ async function bootstrap(): Promise<void> {
   const configService = app.get(ConfigService);
 
   app.setGlobalPrefix('api/v1');
+  app.enableCors({ origin: 'http://localhost:5173' });
   app.enableShutdownHooks();
 
   const port = configService.getOrThrow<number>('api.port');
