@@ -23,7 +23,7 @@ describe('validateEnvironment', () => {
     expect(() =>
       validateEnvironment({
         DATABASE_URL: 'postgresql://doclens:password@localhost:5433/doclens',
-        REDIS_URL: 'redis://localhost:6379',
+        REDIS_URL: 'not-a-valid-redis-url',
       }),
     ).toThrow('Invalid worker environment configuration: REDIS_URL:');
   });
