@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": ".",
+    "paths": {
+      "@doclens/domain": ["../domain/dist/index.d.ts"]
+    }
+  },
+  "exclude": ["dist", "node_modules", "test", "**/*.spec.ts"]
+}
