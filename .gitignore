@@ -25,6 +25,8 @@ lerna-debug.log*
 !apps/api/test/**/*.spec.ts
 !apps/worker/test/**/*.spec.ts
 !apps/web/test/**/*.spec.ts
+!packages/contracts/test/**/*.spec.ts
+!packages/domain/test/**/*.spec.ts
 *.spec.js
 /test
 

@@ -1,5 +1,29 @@
 {
   "name": "@doclens/domain",
   "version": "0.1.0",
-  "private": true
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
+    "typecheck": "tsc --project tsconfig.json",
+    "test": "jest --runInBand",
+    "build": "tsc --project tsconfig.build.json"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.21.0",
+    "@types/jest": "29.5.14",
+    "@types/node": "22.13.10",
+    "eslint": "9.21.0",
+    "jest": "29.7.0",
+    "ts-jest": "29.2.6",
+    "typescript-eslint": "8.25.0"
+  }
 }
