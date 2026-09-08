@@ -3,11 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "prepare:shared": "pnpm --filter @doclens/contracts... --filter @doclens/storage... run build",
+    "predev": "pnpm run prepare:shared",
     "dev": "node --watch --require ./scripts/register-ts-node.cjs src/main.ts",
     "start": "node dist/main.js",
     "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
+    "pretypecheck": "pnpm run prepare:shared",
     "typecheck": "tsc --project tsconfig.app.json",
+    "pretest": "pnpm run prepare:shared",
     "test": "jest --runInBand",
+    "prebuild": "pnpm run prepare:shared",
     "build": "tsc --project tsconfig.build.json"
   },
   "dependencies": {
@@ -15,6 +20,9 @@
     "@nestjs/config": "4.0.2",
     "@nestjs/core": "11.0.11",
     "@nestjs/platform-express": "11.0.11",
+    "@doclens/contracts": "workspace:*",
+    "@doclens/domain": "workspace:*",
+    "@doclens/storage": "workspace:*",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.1",
     "zod": "3.24.2"
