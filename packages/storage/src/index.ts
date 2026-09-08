@@ -1,7 +1,9 @@
 export type {
   CreatePresignedUploadInput,
+  GetObjectMetadataInput,
   PresignedUpload,
   StorageProvider,
+  StorageObjectMetadata,
 } from './contracts/storage-provider.interface';
 export { parseS3StorageConfig } from './config/s3-storage.config';
 export type { S3StorageConfig, StorageEnvironment } from './config/s3-storage.config';

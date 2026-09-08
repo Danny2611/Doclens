@@ -1,4 +1,4 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { HeadObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 import {
   createS3Client,
@@ -88,5 +88,57 @@ describe('S3StorageProvider', () => {
       provider.createPresignedUpload({ objectKey: '', contentType: 'application/pdf' }),
     ).rejects.toMatchObject({ code: StorageErrorCode.INVALID_UPLOAD_INPUT });
     expect(presignPutObjectUrl).not.toHaveBeenCalled();
+  });
+
+  it('retrieves provider-independent object metadata', async () => {
+    const send = jest.fn().mockResolvedValue({
+      ContentType: 'application/pdf',
+      ContentLength: 1024,
+    });
+    const provider = new S3StorageProvider(storageConfig, {
+      client: { send } as unknown as S3Client,
+    });
+
+    await expect(provider.getObjectMetadata({ objectKey: 'uploads/8f5e987f-2860-438e-bb28-e64f05c9f75e' }))
+      .resolves.toEqual({
+        contentType: 'application/pdf',
+        contentLength: 1024,
+      });
+
+    expect(send).toHaveBeenCalledWith(expect.any(HeadObjectCommand));
+    const command = send.mock.calls[0]?.[0] as HeadObjectCommand;
+    expect(command.input).toEqual({
+      Bucket: 'doclens-documents',
+      Key: 'uploads/8f5e987f-2860-438e-bb28-e64f05c9f75e',
+    });
+  });
+
+  it('maps a missing object to a stable storage error', async () => {
+    const provider = new S3StorageProvider(storageConfig, {
+      client: {
+        send: jest.fn().mockRejectedValue({ $metadata: { httpStatusCode: 404 } }),
+      } as unknown as S3Client,
+    });
+
+    await expect(provider.getObjectMetadata({ objectKey: 'uploads/8f5e987f-2860-438e-bb28-e64f05c9f75e' }))
+      .rejects.toEqual(
+        new StorageError(StorageErrorCode.OBJECT_NOT_FOUND, 'The storage object was not found.'),
+      );
+  });
+
+  it('maps metadata lookup failures without exposing SDK details', async () => {
+    const provider = new S3StorageProvider(storageConfig, {
+      client: {
+        send: jest.fn().mockRejectedValue(new Error('provider detail must not escape')),
+      } as unknown as S3Client,
+    });
+
+    await expect(provider.getObjectMetadata({ objectKey: 'uploads/8f5e987f-2860-438e-bb28-e64f05c9f75e' }))
+      .rejects.toEqual(
+        new StorageError(
+          StorageErrorCode.OBJECT_METADATA_LOOKUP_FAILED,
+          'Unable to retrieve storage object metadata.',
+        ),
+      );
   });
 });

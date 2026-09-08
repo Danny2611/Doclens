@@ -1,5 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { PrismaService } from '@doclens/database';
 import type { CreatePresignedUploadInput, StorageProvider } from '@doclens/storage';
 import request from 'supertest';
 
@@ -28,6 +29,8 @@ describe('POST /api/v1/documents/upload-url', () => {
     })
       .overrideProvider(STORAGE_PROVIDER)
       .useValue({ createPresignedUpload })
+      .overrideProvider(PrismaService)
+      .useValue({ document: {} })
       .compile();
 
     app = moduleRef.createNestApplication();

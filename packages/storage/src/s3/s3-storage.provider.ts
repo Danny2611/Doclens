@@ -1,10 +1,12 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { HeadObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 import type {
   CreatePresignedUploadInput,
+  GetObjectMetadataInput,
   PresignedUpload,
   StorageProvider,
+  StorageObjectMetadata,
 } from '../contracts/storage-provider.interface';
 import type { S3StorageConfig } from '../config/s3-storage.config';
 import { StorageError, StorageErrorCode } from '../errors/storage.errors';
@@ -66,6 +68,34 @@ export class S3StorageProvider implements StorageProvider {
       );
     }
   }
+
+  async getObjectMetadata(input: GetObjectMetadataInput): Promise<StorageObjectMetadata> {
+    validateObjectKey(input.objectKey);
+
+    try {
+      const output = await this.client.send(new HeadObjectCommand({
+        Bucket: this.config.bucket,
+        Key: input.objectKey,
+      }));
+
+      return {
+        contentType: output.ContentType,
+        contentLength: output.ContentLength,
+      };
+    } catch (error) {
+      if (isObjectNotFound(error)) {
+        throw new StorageError(
+          StorageErrorCode.OBJECT_NOT_FOUND,
+          'The storage object was not found.',
+        );
+      }
+
+      throw new StorageError(
+        StorageErrorCode.OBJECT_METADATA_LOOKUP_FAILED,
+        'Unable to retrieve storage object metadata.',
+      );
+    }
+  }
 }
 
 export function createS3StorageProvider(config: S3StorageConfig): StorageProvider {
@@ -85,10 +115,31 @@ export function createS3Client(config: S3StorageConfig): S3Client {
 }
 
 function validateUploadInput(input: CreatePresignedUploadInput): void {
-  if (input.objectKey.trim() === '' || input.contentType.trim() === '') {
+  if (input.contentType.trim() === '') {
     throw new StorageError(
       StorageErrorCode.INVALID_UPLOAD_INPUT,
       'Upload input is invalid.',
     );
   }
+
+  validateObjectKey(input.objectKey);
+}
+
+function validateObjectKey(objectKey: string): void {
+  if (objectKey.trim() === '') {
+    throw new StorageError(
+      StorageErrorCode.INVALID_UPLOAD_INPUT,
+      'Upload input is invalid.',
+    );
+  }
+}
+
+function isObjectNotFound(error: unknown): boolean {
+  if (!error || typeof error !== 'object') {
+    return false;
+  }
+
+  const candidate = error as { name?: unknown; $metadata?: { httpStatusCode?: unknown } };
+
+  return candidate.name === 'NotFound' || candidate.$metadata?.httpStatusCode === 404;
 }

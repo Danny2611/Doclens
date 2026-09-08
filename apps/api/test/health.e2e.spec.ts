@@ -1,5 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { PrismaService } from '@doclens/database';
 import request from 'supertest';
 
 import { AppModule } from '../src/app.module';
@@ -10,7 +11,10 @@ describe('Health endpoint', () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    })
+      .overrideProvider(PrismaService)
+      .useValue({ document: {} })
+      .compile();
 
     app = moduleRef.createNestApplication();
     app.setGlobalPrefix('api/v1');

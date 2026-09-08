@@ -10,6 +10,17 @@ export interface PresignedUpload {
   requiredHeaders: Record<string, string>;
 }
 
+export interface GetObjectMetadataInput {
+  objectKey: string;
+}
+
+/** Provider-independent metadata returned after an uploaded object is verified. */
+export interface StorageObjectMetadata {
+  contentType?: string;
+  contentLength?: number;
+}
+
 export interface StorageProvider {
   createPresignedUpload(input: CreatePresignedUploadInput): Promise<PresignedUpload>;
+  getObjectMetadata(input: GetObjectMetadataInput): Promise<StorageObjectMetadata>;
 }

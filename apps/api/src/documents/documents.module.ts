@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { createS3StorageProvider, type S3StorageConfig } from '@doclens/storage';
 
 import { DocumentsController } from './controllers/documents.controller';
+import { DocumentsService } from './services/documents.service';
 import { DocumentUploadService } from './services/document-upload.service';
 import { STORAGE_PROVIDER } from './storage-provider.token';
 
@@ -10,6 +11,7 @@ import { STORAGE_PROVIDER } from './storage-provider.token';
   controllers: [DocumentsController],
   providers: [
     DocumentUploadService,
+    DocumentsService,
     {
       provide: STORAGE_PROVIDER,
       inject: [ConfigService],

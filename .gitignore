@@ -4,7 +4,8 @@ dist/
 /node_modules
 node_modules/
 /build
-/docs
+/docs/*
+!/docs/DocLens-D2-T04B.postman_collection.json
 # Logs
 logs
 *.log
@@ -144,7 +145,8 @@ __pycache__/
 *.docx
 
 
-docs/
+docs/*
+!docs/DocLens-D2-T04B.postman_collection.json
 
 plans/
 
