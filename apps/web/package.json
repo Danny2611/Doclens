@@ -10,6 +10,8 @@
     "build": "tsc --project tsconfig.app.json && vite build"
   },
   "dependencies": {
+    "@doclens/contracts": "workspace:*",
+    "@doclens/domain": "workspace:*",
     "@tanstack/react-query": "5.66.8",
     "react": "19.0.0",
     "react-dom": "19.0.0",

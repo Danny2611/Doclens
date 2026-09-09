@@ -84,6 +84,12 @@ importers:
 
   apps/web:
     dependencies:
+      '@doclens/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@doclens/domain':
+        specifier: workspace:*
+        version: link:../../packages/domain
       '@tanstack/react-query':
         specifier: 5.66.8
         version: 5.66.8(react@19.0.0)

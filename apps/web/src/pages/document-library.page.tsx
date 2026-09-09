@@ -1,6 +1,7 @@
 import type { JSX } from 'react';
 
 import { BackendConnectionStatus } from '../shared/components/backend-connection-status';
+import { DocumentUploadForm } from '../features/uploads/document-upload-form';
 
 export function DocumentLibraryPage(): JSX.Element {
   return (
@@ -19,6 +20,7 @@ export function DocumentLibraryPage(): JSX.Element {
           Nền tảng giúp bạn hiểu tài liệu dài bằng các bản tóm tắt có thể kiểm chứng.
         </p>
         <BackendConnectionStatus />
+        <DocumentUploadForm />
       </section>
     </main>
   );

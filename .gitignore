@@ -114,6 +114,9 @@ data/
 # Uploads & media
 uploads/
 public/uploads/
+!apps/web/src/features/uploads/
+!apps/web/src/features/uploads/**/*.ts
+!apps/web/src/features/uploads/**/*.tsx
 
 # Debug & profiling
 *.cpuprofile
