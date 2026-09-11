@@ -1,8 +1,11 @@
 # compiled output
 /dist
+dist/
 /node_modules
+node_modules/
 /build
-/docs
+/docs/*
+!/docs/DocLens-D2-T04B.postman_collection.json
 # Logs
 logs
 *.log
@@ -20,6 +23,12 @@ lerna-debug.log*
 /.nyc_output
 *.spec.ts
 !src/**/*.spec.ts
+!apps/api/test/**/*.spec.ts
+!apps/worker/test/**/*.spec.ts
+!apps/web/test/**/*.spec.ts
+!packages/contracts/test/**/*.spec.ts
+!packages/domain/test/**/*.spec.ts
+!packages/storage/test/**/*.spec.ts
 *.spec.js
 /test
 
@@ -105,6 +114,9 @@ data/
 # Uploads & media
 uploads/
 public/uploads/
+!apps/web/src/features/uploads/
+!apps/web/src/features/uploads/**/*.ts
+!apps/web/src/features/uploads/**/*.tsx
 
 # Debug & profiling
 *.cpuprofile
@@ -136,7 +148,8 @@ __pycache__/
 *.docx
 
 
-docs/
+docs/*
+!docs/DocLens-D2-T04B.postman_collection.json
 
 plans/
 

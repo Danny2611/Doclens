@@ -1,1 +1,96 @@
+name: doclens-local
 
+services:
+  postgres:
+    image: postgres:16.6-alpine
+    container_name: doclens-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-doclens}
+      POSTGRES_USER: ${POSTGRES_USER:-doclens}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-doclens_local_password}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - doclens-postgres-data:/var/lib/postgresql/data
+    networks:
+      - doclens-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 5s
+
+  redis:
+    image: redis:7.4.2-alpine
+    container_name: doclens-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - doclens-redis-data:/data
+    networks:
+      - doclens-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+
+  minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    container_name: doclens-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-doclensminio}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-doclensminio_local_password}
+      MINIO_API_CORS_ALLOW_ORIGIN: ${MINIO_CORS_ALLOWED_ORIGIN:-http://localhost:5173}
+    ports:
+      - "${MINIO_API_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - doclens-minio-data:/data
+    networks:
+      - doclens-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 5s
+
+  minio-init:
+    image: minio/mc:RELEASE.2025-04-03T17-07-56Z
+    container_name: doclens-minio-init
+    restart: "no"
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-doclensminio}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-doclensminio_local_password}
+      S3_BUCKET: ${S3_BUCKET:-doclens-documents}
+    entrypoint: /bin/sh
+    command:
+      - -c
+      - >-
+        mc alias set doclens-local http://minio:9000 "$${MINIO_ROOT_USER}" "$${MINIO_ROOT_PASSWORD}"
+        && mc mb --ignore-existing "doclens-local/$${S3_BUCKET}"
+    networks:
+      - doclens-network
+
+networks:
+  doclens-network:
+    name: doclens-local-network
+
+volumes:
+  doclens-postgres-data:
+    name: doclens-local-postgres-data
+  doclens-redis-data:
+    name: doclens-local-redis-data
+  doclens-minio-data:
+    name: doclens-local-minio-data

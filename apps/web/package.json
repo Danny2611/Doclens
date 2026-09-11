@@ -1,0 +1,35 @@
+{
+  "name": "@doclens/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" \"test/**/*.{ts,tsx}\"",
+    "typecheck": "tsc --project tsconfig.app.json",
+    "test": "vitest run",
+    "build": "tsc --project tsconfig.app.json && vite build"
+  },
+  "dependencies": {
+    "@doclens/contracts": "workspace:*",
+    "@doclens/domain": "workspace:*",
+    "@tanstack/react-query": "5.66.8",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-router-dom": "7.3.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.21.0",
+    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/react": "16.2.0",
+    "@types/react": "19.0.8",
+    "@types/react-dom": "19.0.3",
+    "@tailwindcss/vite": "4.3.3",
+    "@vitejs/plugin-react": "4.3.4",
+    "eslint": "9.21.0",
+    "jsdom": "26.0.0",
+    "tailwindcss": "4.3.3",
+    "typescript-eslint": "8.25.0",
+    "vite": "6.1.0",
+    "vitest": "3.0.5"
+  }
+}

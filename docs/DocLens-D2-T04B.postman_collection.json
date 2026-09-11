@@ -1,0 +1,155 @@
+{
+  "info": {
+    "name": "DocLens D2-T04B Document APIs",
+    "description": "Local requests for the document upload intent, create, list, and detail APIs. The presigned PUT request requires selecting a real local PDF or DOCX file in Postman. Keep originalFilename, mimeType, and fileSize equal to that file.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "apiBaseUrl",
+      "value": "http://localhost:3000/api/v1"
+    },
+    {
+      "key": "originalFilename",
+      "value": "example.pdf"
+    },
+    {
+      "key": "mimeType",
+      "value": "application/pdf"
+    },
+    {
+      "key": "fileSize",
+      "value": "1024"
+    },
+    {
+      "key": "storageKey",
+      "value": ""
+    },
+    {
+      "key": "uploadUrl",
+      "value": ""
+    },
+    {
+      "key": "documentId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": "{{apiBaseUrl}}/health"
+      }
+    },
+    {
+      "name": "Create upload intent",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"originalFilename\": \"{{originalFilename}}\",\n  \"mimeType\": \"{{mimeType}}\",\n  \"fileSize\": {{fileSize}}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{apiBaseUrl}}/documents/upload-url"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();",
+              "pm.test('returns a presigned PUT requirement', () => pm.expect(response.method).to.eql('PUT'));",
+              "pm.collectionVariables.set('storageKey', response.storageKey);",
+              "pm.collectionVariables.set('uploadUrl', response.uploadUrl);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Upload selected binary through presigned URL",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "{{mimeType}}"
+          }
+        ],
+        "body": {
+          "mode": "file",
+          "file": {}
+        },
+        "url": "{{uploadUrl}}",
+        "description": "After running Create upload intent, choose the same local file configured by originalFilename, mimeType, and fileSize. Do not log or export the populated uploadUrl variable."
+      }
+    },
+    {
+      "name": "Create document from verified object",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"storageKey\": \"{{storageKey}}\",\n  \"originalFilename\": \"{{originalFilename}}\",\n  \"mimeType\": \"{{mimeType}}\",\n  \"fileSize\": {{fileSize}}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{apiBaseUrl}}/documents"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();",
+              "pm.test('creates an uploaded document', () => pm.expect(response.status).to.eql('UPLOADED'));",
+              "pm.test('does not expose the storage key', () => pm.expect(response).not.to.have.property('storageKey'));",
+              "pm.collectionVariables.set('documentId', response.id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "List documents",
+      "request": {
+        "method": "GET",
+        "url": "{{apiBaseUrl}}/documents?page=1&limit=20"
+      }
+    },
+    {
+      "name": "Get document detail",
+      "request": {
+        "method": "GET",
+        "url": "{{apiBaseUrl}}/documents/{{documentId}}"
+      }
+    },
+    {
+      "name": "Get unknown document (expected 404)",
+      "request": {
+        "method": "GET",
+        "url": "{{apiBaseUrl}}/documents/00000000-0000-4000-8000-000000000000"
+      }
+    }
+  ]
+}
