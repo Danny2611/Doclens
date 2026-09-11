@@ -1,4 +1,5 @@
 import type { ChangeEvent, JSX } from 'react';
+import type { DocumentResponse } from '@doclens/contracts';
 import { useState } from 'react';
 
 import { apiClient } from '../../shared/api/api-client';
@@ -7,7 +8,7 @@ import { useDocumentUpload } from './use-document-upload';
 
 const acceptedTypes = '.pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 
-export function DocumentUploadForm(): JSX.Element {
+export function DocumentUploadForm({ onSuccess }: { onSuccess?: (document: DocumentResponse) => void }): JSX.Element {
   const [file, setFile] = useState<File>();
   const [selectionError, setSelectionError] = useState<string>();
   const upload = useDocumentUpload({ apiClient });
@@ -25,7 +26,7 @@ export function DocumentUploadForm(): JSX.Element {
       <label className="mt-4 block text-sm font-medium" htmlFor="document-file">Chọn tệp</label>
       <input id="document-file" className="mt-1 block w-full" type="file" accept={acceptedTypes} onChange={selectFile} disabled={upload.isSubmitting} />
       {selectionError ? <p className="mt-2 text-sm text-red-700" role="alert">{selectionError}</p> : null}
-      <button className="mt-4 rounded bg-slate-800 px-4 py-2 text-white disabled:opacity-50" type="button" disabled={!file || !!selectionError || upload.isSubmitting} onClick={() => file && void upload.upload(file)}>
+      <button className="mt-4 rounded bg-slate-800 px-4 py-2 text-white disabled:opacity-50" type="button" disabled={!file || !!selectionError || upload.isSubmitting} onClick={() => file && void upload.upload(file).then((document) => document && onSuccess?.(document))}>
         {upload.isSubmitting ? 'Đang tải lên…' : 'Tải tài liệu'}
       </button>
       {upload.state !== 'idle' && upload.state !== 'error' && upload.state !== 'success' ? <p className="mt-2 text-sm" role="status">Đang xử lý: {upload.state}.</p> : null}
