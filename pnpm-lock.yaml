@@ -205,6 +205,9 @@ importers:
       '@doclens/domain':
         specifier: workspace:*
         version: link:../domain
+      zod:
+        specifier: 3.24.2
+        version: 3.24.2
     devDependencies:
       '@eslint/js':
         specifier: 9.21.0
@@ -282,7 +285,33 @@ importers:
         specifier: 8.25.0
         version: 8.25.0(eslint@9.21.0(jiti@2.7.0))(typescript@5.7.3)
 
-  packages/queue: {}
+  packages/queue:
+    dependencies:
+      '@doclens/contracts':
+        specifier: workspace:*
+        version: link:../contracts
+    devDependencies:
+      '@eslint/js':
+        specifier: 9.21.0
+        version: 9.21.0
+      '@types/jest':
+        specifier: 29.5.14
+        version: 29.5.14
+      '@types/node':
+        specifier: 22.13.10
+        version: 22.13.10
+      eslint:
+        specifier: 9.21.0
+        version: 9.21.0(jiti@2.7.0)
+      jest:
+        specifier: 29.7.0
+        version: 29.7.0(@types/node@22.13.10)(ts-node@10.9.2(@types/node@22.13.10)(typescript@5.7.3))
+      ts-jest:
+        specifier: 29.2.6
+        version: 29.2.6(@babel/core@7.29.7)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.29.7))(jest@29.7.0(@types/node@22.13.10))(typescript@5.7.3)
+      typescript-eslint:
+        specifier: 8.25.0
+        version: 8.25.0(eslint@9.21.0(jiti@2.7.0))(typescript@5.7.3)
 
   packages/storage:
     dependencies:
