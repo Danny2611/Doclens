@@ -24,6 +24,8 @@
     "@doclens/database": "workspace:*",
     "@doclens/domain": "workspace:*",
     "@doclens/storage": "workspace:*",
+    "@doclens/queue": "workspace:*",
+    "bullmq": "5.58.5",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.1",
     "zod": "3.24.2"

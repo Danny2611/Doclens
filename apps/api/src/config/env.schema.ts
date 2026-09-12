@@ -12,6 +12,7 @@ const environmentSchema = z.object({
   S3_SECRET_ACCESS_KEY: z.string().min(1),
   S3_FORCE_PATH_STYLE: z.enum(['true', 'false']).optional(),
   S3_PRESIGNED_UPLOAD_EXPIRATION_SECONDS: z.string().optional(),
+  REDIS_URL: z.string().url(),
 });
 
 export type Environment = z.infer<typeof environmentSchema>;
@@ -33,6 +34,7 @@ export function validateEnvironment(config: Record<string, unknown>): Environmen
     throw new Error('Invalid API environment configuration: storage configuration is invalid.');
   }
 
+  if (!['redis:', 'rediss:'].includes(new URL(result.data.REDIS_URL).protocol)) throw new Error('Invalid API environment configuration: REDIS_URL must use redis: or rediss:.');
   return result.data;
 }
 
