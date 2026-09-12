@@ -8,5 +8,6 @@ import { BullMqWorkerFactory } from './bullmq-worker.factory';
 @Module({
   imports: [DatabaseModule],
   providers: [workerRedisProvider, WorkerDependenciesService, BullMqWorkerFactory],
+  exports: [BullMqWorkerFactory],
 })
 export class WorkerInfrastructureModule {}

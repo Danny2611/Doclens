@@ -61,6 +61,8 @@ export class DocumentProcessingRequestService {
       });
       await this.queue.add(DOCUMENT_PROCESSING_JOB_NAME, payload, {
         jobId: `process-document-${run.id}`,
+        attempts: 3,
+        backoff: { type: 'exponential', delay: 1_000 },
       });
     } catch {
       try {
