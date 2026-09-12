@@ -13,12 +13,15 @@ import { ListDocumentsQueryPipe, type ListDocumentsQuery } from '../dto/list-doc
 import { CreateUploadIntentRequestPipe } from '../dto/create-upload-url.dto';
 import { DocumentsService } from '../services/documents.service';
 import { DocumentUploadService } from '../services/document-upload.service';
+import { DocumentProcessingRequestService } from '../services/document-processing-request.service';
+import type { ProcessDocumentResponse } from '@doclens/contracts';
 
 @Controller('documents')
 export class DocumentsController {
   constructor(
     private readonly documentUploadService: DocumentUploadService,
     private readonly documentsService: DocumentsService,
+    private readonly documentProcessingRequestService: DocumentProcessingRequestService,
   ) {}
 
   @Post('upload-url')
@@ -28,6 +31,9 @@ export class DocumentsController {
   ): Promise<CreateUploadIntentResponse> {
     return this.documentUploadService.createUploadIntent(request);
   }
+
+  @Post(':id/process') @HttpCode(HttpStatus.ACCEPTED)
+  processDocument(@Param('id', new DocumentIdPipe()) id: string): Promise<ProcessDocumentResponse> { return this.documentProcessingRequestService.request(id); }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)

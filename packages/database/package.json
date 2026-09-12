@@ -15,9 +15,9 @@
     "lint": "eslint \"src/**/*.ts\"",
     "typecheck": "tsc --project tsconfig.json",
     "build": "tsc --project tsconfig.build.json",
-    "prisma:validate": "prisma validate --schema prisma/schema.prisma",
-    "prisma:generate": "prisma generate --schema prisma/schema.prisma",
-    "prisma:deploy": "prisma migrate deploy --schema prisma/schema.prisma",
+    "prisma:validate": "node --env-file-if-exists=../../.env ./node_modules/prisma/build/index.js validate --schema prisma/schema.prisma",
+    "prisma:generate": "node --env-file-if-exists=../../.env ./node_modules/prisma/build/index.js generate --schema prisma/schema.prisma",
+    "prisma:deploy": "node --env-file-if-exists=../../.env ./node_modules/prisma/build/index.js migrate deploy --schema prisma/schema.prisma",
     "seed": "node --env-file=../../.env --import tsx prisma/seed.ts"
   },
   "dependencies": {

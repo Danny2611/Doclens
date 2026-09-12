@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prepare:shared": "pnpm --filter @doclens/database... --filter @doclens/contracts... --filter @doclens/storage... run build",
+    "prepare:shared": "pnpm --filter @doclens/database... --filter @doclens/contracts... --filter @doclens/storage... --filter @doclens/queue... run build",
     "predev": "pnpm run prepare:shared",
     "dev": "node --env-file-if-exists=../../.env --watch --require ./scripts/register-ts-node.cjs src/main.ts",
     "start": "node --env-file-if-exists=../../.env dist/main.js",

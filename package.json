@@ -18,6 +18,7 @@
     "dev:api": "pnpm --filter @doclens/api --if-present run dev",
     "dev:worker": "pnpm --filter @doclens/worker --if-present run dev",
     "dev:web": "pnpm --filter @doclens/web --if-present run dev",
+    "db:migrate": "pnpm --filter @doclens/database run prisma:deploy",
     "lint": "pnpm --recursive --if-present run lint",
     "typecheck": "pnpm --recursive --if-present run typecheck",
     "test": "pnpm --recursive --if-present run test",
