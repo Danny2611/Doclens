@@ -20,9 +20,7 @@ describe('DocumentsService', () => {
     };
     const prisma = {
       document: {
-        findUnique: jest.fn()
-          .mockResolvedValueOnce(null)
-          .mockResolvedValueOnce(existingDocument),
+        findUnique: jest.fn().mockResolvedValueOnce(null).mockResolvedValueOnce(existingDocument),
         create: jest.fn().mockRejectedValue({ code: 'P2002' }),
       },
     };
@@ -34,34 +32,43 @@ describe('DocumentsService', () => {
     };
     const service = new DocumentsService(prisma as never, storageProvider as never);
 
-    await expect(service.createDocument({
-      storageKey,
-      originalFilename: 'report.pdf',
-      mimeType: 'application/pdf',
-      fileSize: 1024,
-    })).resolves.toMatchObject({ id: existingDocument.id, status: 'UPLOADED' });
+    await expect(
+      service.createDocument({
+        storageKey,
+        originalFilename: 'report.pdf',
+        mimeType: 'application/pdf',
+        fileSize: 1024,
+      }),
+    ).resolves.toMatchObject({ id: existingDocument.id, status: 'UPLOADED' });
 
     expect(prisma.document.create).toHaveBeenCalledTimes(1);
     expect(storageProvider.getObjectMetadata).toHaveBeenCalledTimes(1);
   });
 
   it('maps unavailable storage metadata to a safe error response', async () => {
-    const service = new DocumentsService({
-      document: {
-        findUnique: jest.fn().mockResolvedValue(null),
-      },
-    } as never, {
-      getObjectMetadata: jest.fn().mockRejectedValue(
-        new StorageError(StorageErrorCode.OBJECT_METADATA_LOOKUP_FAILED, 'provider detail'),
-      ),
-    } as never);
+    const service = new DocumentsService(
+      {
+        document: {
+          findUnique: jest.fn().mockResolvedValue(null),
+        },
+      } as never,
+      {
+        getObjectMetadata: jest
+          .fn()
+          .mockRejectedValue(
+            new StorageError(StorageErrorCode.OBJECT_METADATA_LOOKUP_FAILED, 'provider detail'),
+          ),
+      } as never,
+    );
 
-    await expect(service.createDocument({
-      storageKey,
-      originalFilename: 'report.pdf',
-      mimeType: 'application/pdf',
-      fileSize: 1024,
-    })).rejects.toMatchObject({
+    await expect(
+      service.createDocument({
+        storageKey,
+        originalFilename: 'report.pdf',
+        mimeType: 'application/pdf',
+        fileSize: 1024,
+      }),
+    ).rejects.toMatchObject({
       response: { error: { code: DocumentErrorCode.STORAGE_PROVIDER_UNAVAILABLE } },
     });
   });

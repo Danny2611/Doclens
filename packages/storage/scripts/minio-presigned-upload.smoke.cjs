@@ -1,9 +1,5 @@
 const { DeleteObjectCommand, HeadObjectCommand } = require('@aws-sdk/client-s3');
-const {
-  createS3Client,
-  createS3StorageProvider,
-  parseS3StorageConfig,
-} = require('../dist');
+const { createS3Client, createS3StorageProvider, parseS3StorageConfig } = require('../dist');
 
 const SMOKE_TEST_PREFIX = 'smoke-tests/';
 const FIXTURE_CONTENT_TYPE = 'application/pdf';
@@ -88,9 +84,10 @@ async function run() {
       throw new SmokeTestError('metadata verification', 'OBJECT_METADATA_MISMATCH');
     }
   } catch (error) {
-    failure = error instanceof SmokeTestError
-      ? error
-      : new SmokeTestError('execution', 'UNEXPECTED_STORAGE_FAILURE');
+    failure =
+      error instanceof SmokeTestError
+        ? error
+        : new SmokeTestError('execution', 'UNEXPECTED_STORAGE_FAILURE');
   } finally {
     if (config && client && objectKey) {
       try {
@@ -112,7 +109,9 @@ async function run() {
     throw failure;
   }
 
-  process.stdout.write(`Storage smoke test passed for bucket ${config.bucket} and ${SMOKE_TEST_PREFIX}\n`);
+  process.stdout.write(
+    `Storage smoke test passed for bucket ${config.bucket} and ${SMOKE_TEST_PREFIX}\n`,
+  );
 }
 
 run().catch((error) => {

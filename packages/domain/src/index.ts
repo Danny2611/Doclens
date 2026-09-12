@@ -14,5 +14,11 @@ export type {
 } from './documents/document-file-policy';
 export { UploadErrorCode } from './documents/document.errors';
 export type { UploadErrorCode as UploadErrorCodeValue } from './documents/document.errors';
-export { PROCESSING_RUN_STATUSES, assertProcessingRunTransition, canTransitionProcessingRun, isProcessingRunActive, isProcessingRunTerminal } from './processing/processing-run-lifecycle';
+export {
+  PROCESSING_RUN_STATUSES,
+  assertProcessingRunTransition,
+  canTransitionProcessingRun,
+  isProcessingRunActive,
+  isProcessingRunTerminal,
+} from './processing/processing-run-lifecycle';
 export type { ProcessingRunStatus } from './processing/processing-run-lifecycle';

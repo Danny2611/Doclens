@@ -3,7 +3,13 @@ import { z } from 'zod';
 const environmentSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   DATABASE_URL: z.string().url(),
-  REDIS_URL: z.string().url().refine((value) => ['redis:', 'rediss:'].includes(new URL(value).protocol), 'must use redis: or rediss:'),
+  REDIS_URL: z
+    .string()
+    .url()
+    .refine(
+      (value) => ['redis:', 'rediss:'].includes(new URL(value).protocol),
+      'must use redis: or rediss:',
+    ),
   WORKER_STARTUP_TIMEOUT_MS: z.coerce.number().int().min(100).max(60_000).default(5_000),
 });
 

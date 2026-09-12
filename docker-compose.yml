@@ -10,13 +10,13 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-doclens}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-doclens_local_password}
     ports:
-      - "${POSTGRES_PORT:-5433}:5432"
+      - '${POSTGRES_PORT:-5433}:5432'
     volumes:
       - doclens-postgres-data:/var/lib/postgresql/data
     networks:
       - doclens-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
       interval: 5s
       timeout: 5s
       retries: 20
@@ -26,15 +26,15 @@ services:
     image: redis:7.4.2-alpine
     container_name: doclens-redis
     restart: unless-stopped
-    command: ["redis-server", "--appendonly", "yes"]
+    command: ['redis-server', '--appendonly', 'yes']
     ports:
-      - "${REDIS_PORT:-6379}:6379"
+      - '${REDIS_PORT:-6379}:6379'
     volumes:
       - doclens-redis-data:/data
     networks:
       - doclens-network
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ['CMD', 'redis-cli', 'ping']
       interval: 5s
       timeout: 3s
       retries: 20
@@ -50,14 +50,14 @@ services:
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-doclensminio_local_password}
       MINIO_API_CORS_ALLOW_ORIGIN: ${MINIO_CORS_ALLOWED_ORIGIN:-http://localhost:5173}
     ports:
-      - "${MINIO_API_PORT:-9000}:9000"
-      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+      - '${MINIO_API_PORT:-9000}:9000'
+      - '${MINIO_CONSOLE_PORT:-9001}:9001'
     volumes:
       - doclens-minio-data:/data
     networks:
       - doclens-network
     healthcheck:
-      test: ["CMD-SHELL", "curl --fail --silent http://localhost:9000/minio/health/live"]
+      test: ['CMD-SHELL', 'curl --fail --silent http://localhost:9000/minio/health/live']
       interval: 5s
       timeout: 5s
       retries: 20
@@ -66,7 +66,7 @@ services:
   minio-init:
     image: minio/mc:RELEASE.2025-04-03T17-07-56Z
     container_name: doclens-minio-init
-    restart: "no"
+    restart: 'no'
     depends_on:
       minio:
         condition: service_healthy

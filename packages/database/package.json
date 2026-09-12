@@ -10,7 +10,10 @@
       "require": "./dist/index.js"
     }
   },
-  "files": ["dist", "prisma"],
+  "files": [
+    "dist",
+    "prisma"
+  ],
   "scripts": {
     "lint": "eslint \"src/**/*.ts\"",
     "typecheck": "tsc --project tsconfig.json",

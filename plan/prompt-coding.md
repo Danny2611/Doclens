@@ -58,16 +58,16 @@ After implementation:
 
 Nếu agent có quyền đọc repository, chỉ cần chỉ nó tới:
 
-* Overview.
-* Current plan section.
-* Các files liên quan.
+- Overview.
+- Current plan section.
+- Các files liên quan.
 
 Cho quá nhiều context không liên quan làm agent dễ:
 
-* Sửa ngoài scope.
-* Bắt chước code cũ không liên quan.
-* Tạo abstraction quá tổng quát.
-* Bỏ sót acceptance criteria chính.
+- Sửa ngoài scope.
+- Bắt chước code cũ không liên quan.
+- Tạo abstraction quá tổng quát.
+- Bỏ sót acceptance criteria chính.
 
 ---
 
@@ -77,39 +77,39 @@ Sau mỗi task, em phải kiểm tra **năm tầng**.
 
 ## Tầng 1 — Scope
 
-* Có sửa file ngoài task không?
-* Có tự thêm package không?
-* Có implement milestone sau không?
+- Có sửa file ngoài task không?
+- Có tự thêm package không?
+- Có implement milestone sau không?
 
 ## Tầng 2 — Correctness
 
-* Happy path chạy chưa?
-* Failure cases có xử lý chưa?
-* Có race condition không?
-* Chạy lại có duplicate không?
+- Happy path chạy chưa?
+- Failure cases có xử lý chưa?
+- Có race condition không?
+- Chạy lại có duplicate không?
 
 ## Tầng 3 — Architecture
 
-* Controller có chứa business logic không?
-* Domain có phụ thuộc Prisma/NestJS không?
-* AI SDK có bị gọi trực tiếp ngoài provider không?
-* Worker và API có bị coupling không?
+- Controller có chứa business logic không?
+- Domain có phụ thuộc Prisma/NestJS không?
+- AI SDK có bị gọi trực tiếp ngoài provider không?
+- Worker và API có bị coupling không?
 
 ## Tầng 4 — Tests
 
-* Test có thực sự test behavior không?
-* Có mock quá nhiều không?
-* Test có thể fail khi logic sai không?
-* Có gọi external service trong unit test không?
+- Test có thực sự test behavior không?
+- Có mock quá nhiều không?
+- Test có thể fail khi logic sai không?
+- Có gọi external service trong unit test không?
 
 ## Tầng 5 — Understanding
 
 Em phải tự trả lời:
 
-* Tại sao code được thiết kế như vậy?
-* Có phương án đơn giản hơn không?
-* Failure ở giữa flow thì dữ liệu thế nào?
-* Nếu interview hỏi, em giải thích được không?
+- Tại sao code được thiết kế như vậy?
+- Có phương án đơn giản hơn không?
+- Failure ở giữa flow thì dữ liệu thế nào?
+- Nếu interview hỏi, em giải thích được không?
 
 > Nếu không trả lời được, yêu cầu AI giải thích hoặc viết lại đơn giản hơn trước khi commit.
 
@@ -132,10 +132,10 @@ main
 
 Mỗi commit:
 
-* Build được.
-* Không chứa secret.
-* Có message mô tả outcome.
-* Không trộn formatting toàn repo với feature.
+- Build được.
+- Không chứa secret.
+- Có message mô tả outcome.
+- Không trộn formatting toàn repo với feature.
 
 > Không để AI tạo một commit chứa 70 file cho năm task khác nhau.
 
@@ -173,18 +173,18 @@ Plan status updated
 
 # 10. Những lỗi dễ khiến AI gen lung tung
 
-* Giao cả một ngày trong một prompt.
-* Không ghi out-of-scope.
-* Không có acceptance criteria đo được.
-* Cho phép agent “cải thiện architecture nếu cần”.
-* Không yêu cầu inspect code trước khi sửa.
-* Không kiểm tra diff.
-* Cho agent tự chọn thêm framework/package.
-* Tạo quá nhiều interface trước khi có implementation.
-* Làm database đầy đủ cho feature chưa triển khai.
-* Đánh dấu task done chỉ vì code compile.
-* Bắt frontend mock một API contract chưa được định nghĩa.
-* Làm UI đẹp trước khi workflow end-to-end chạy.
+- Giao cả một ngày trong một prompt.
+- Không ghi out-of-scope.
+- Không có acceptance criteria đo được.
+- Cho phép agent “cải thiện architecture nếu cần”.
+- Không yêu cầu inspect code trước khi sửa.
+- Không kiểm tra diff.
+- Cho agent tự chọn thêm framework/package.
+- Tạo quá nhiều interface trước khi có implementation.
+- Làm database đầy đủ cho feature chưa triển khai.
+- Đánh dấu task done chỉ vì code compile.
+- Bắt frontend mock một API contract chưa được định nghĩa.
+- Làm UI đẹp trước khi workflow end-to-end chạy.
 
 ---
 

@@ -7,7 +7,9 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      '@doclens/domain': fileURLToPath(new URL('../../packages/domain/src/index.ts', import.meta.url)),
+      '@doclens/domain': fileURLToPath(
+        new URL('../../packages/domain/src/index.ts', import.meta.url),
+      ),
     },
   },
   server: {

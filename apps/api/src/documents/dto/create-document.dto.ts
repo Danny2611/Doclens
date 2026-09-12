@@ -5,12 +5,14 @@ import { z } from 'zod';
 
 import type { CreateDocumentRequest } from '@doclens/contracts';
 
-const createDocumentRequestSchema = z.object({
-  storageKey: z.string(),
-  originalFilename: z.string(),
-  mimeType: z.string(),
-  fileSize: z.number(),
-}).strict();
+const createDocumentRequestSchema = z
+  .object({
+    storageKey: z.string(),
+    originalFilename: z.string(),
+    mimeType: z.string(),
+    fileSize: z.number(),
+  })
+  .strict();
 
 export class CreateDocumentRequestPipe implements PipeTransform<unknown, CreateDocumentRequest> {
   transform(value: unknown): CreateDocumentRequest {

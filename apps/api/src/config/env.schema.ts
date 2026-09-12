@@ -34,7 +34,8 @@ export function validateEnvironment(config: Record<string, unknown>): Environmen
     throw new Error('Invalid API environment configuration: storage configuration is invalid.');
   }
 
-  if (!['redis:', 'rediss:'].includes(new URL(result.data.REDIS_URL).protocol)) throw new Error('Invalid API environment configuration: REDIS_URL must use redis: or rediss:.');
+  if (!['redis:', 'rediss:'].includes(new URL(result.data.REDIS_URL).protocol))
+    throw new Error('Invalid API environment configuration: REDIS_URL must use redis: or rediss:.');
   return result.data;
 }
 

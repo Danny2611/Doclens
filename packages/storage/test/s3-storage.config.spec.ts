@@ -1,10 +1,6 @@
 import { PRESIGNED_UPLOAD_EXPIRATION_SECONDS } from '@doclens/domain';
 
-import {
-  parseS3StorageConfig,
-  StorageError,
-  StorageErrorCode,
-} from '../src';
+import { parseS3StorageConfig, StorageError, StorageErrorCode } from '../src';
 
 const validEnvironment = {
   S3_ENDPOINT: 'http://localhost:9000',
@@ -33,7 +29,10 @@ describe('parseS3StorageConfig', () => {
     ['a malformed endpoint', { ...validEnvironment, S3_ENDPOINT: 'not-a-url' }],
     ['a missing bucket', { ...validEnvironment, S3_BUCKET: '' }],
     ['an invalid path-style value', { ...validEnvironment, S3_FORCE_PATH_STYLE: 'yes' }],
-    ['a non-positive expiration', { ...validEnvironment, S3_PRESIGNED_UPLOAD_EXPIRATION_SECONDS: '0' }],
+    [
+      'a non-positive expiration',
+      { ...validEnvironment, S3_PRESIGNED_UPLOAD_EXPIRATION_SECONDS: '0' },
+    ],
   ])('rejects %s', (_description, environment) => {
     const error = captureError(() => parseS3StorageConfig(environment));
 

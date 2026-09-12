@@ -41,11 +41,11 @@ describe('Document create and query endpoints', () => {
     getObjectMetadata = jest.fn(async () => objectMetadata);
     documentRepository = {
       findUnique: jest.fn(({ where }) =>
-        Promise.resolve(records.find((document) =>
-          where.storageKey
-            ? document.storageKey === where.storageKey
-            : document.id === where.id,
-        ) ?? null),
+        Promise.resolve(
+          records.find((document) =>
+            where.storageKey ? document.storageKey === where.storageKey : document.id === where.id,
+          ) ?? null,
+        ),
       ),
       create: jest.fn(({ data }) => {
         if (records.some((document) => document.storageKey === data.storageKey)) {
@@ -67,9 +67,11 @@ describe('Document create and query endpoints', () => {
         return Promise.resolve(record);
       }),
       findMany: jest.fn(({ skip, take }) =>
-        Promise.resolve([...records]
-          .sort((left, right) => right.createdAt.getTime() - left.createdAt.getTime())
-          .slice(skip, skip + take)),
+        Promise.resolve(
+          [...records]
+            .sort((left, right) => right.createdAt.getTime() - left.createdAt.getTime())
+            .slice(skip, skip + take),
+        ),
       ),
       count: jest.fn(() => Promise.resolve(records.length)),
     };
@@ -105,33 +107,41 @@ describe('Document create and query endpoints', () => {
   it.each([
     ['report.pdf', pdfMimeType, 'PDF'],
     ['report.docx', docxMimeType, 'DOCX'],
-  ])('creates an UPLOADED document from a verified %s object', async (originalFilename, mimeType, documentType) => {
-    objectMetadata = { contentType: mimeType, contentLength: 1024 };
+  ])(
+    'creates an UPLOADED document from a verified %s object',
+    async (originalFilename, mimeType, documentType) => {
+      objectMetadata = { contentType: mimeType, contentLength: 1024 };
 
-    const response = await request(app.getHttpServer())
-      .post('/api/v1/documents')
-      .send({ storageKey, originalFilename, mimeType, fileSize: 1024 })
-      .expect(201);
+      const response = await request(app.getHttpServer())
+        .post('/api/v1/documents')
+        .send({ storageKey, originalFilename, mimeType, fileSize: 1024 })
+        .expect(201);
 
-    expect(response.body).toEqual({
-      id: 'e2b3c4d5-6789-4abc-8def-0123456789ab',
-      originalName: originalFilename,
-      documentType,
-      mimeType,
-      fileSize: 1024,
-      status: 'UPLOADED',
-      pageCount: null,
-      createdAt: '2026-09-08T00:00:00.000Z',
-      updatedAt: '2026-09-08T00:00:00.000Z',
-    });
-    expect(response.body).not.toHaveProperty('storageKey');
-    expect(getObjectMetadata).toHaveBeenCalledWith({ objectKey: storageKey });
-  });
+      expect(response.body).toEqual({
+        id: 'e2b3c4d5-6789-4abc-8def-0123456789ab',
+        originalName: originalFilename,
+        documentType,
+        mimeType,
+        fileSize: 1024,
+        status: 'UPLOADED',
+        pageCount: null,
+        createdAt: '2026-09-08T00:00:00.000Z',
+        updatedAt: '2026-09-08T00:00:00.000Z',
+      });
+      expect(response.body).not.toHaveProperty('storageKey');
+      expect(getObjectMetadata).toHaveBeenCalledWith({ objectKey: storageKey });
+    },
+  );
 
   it('rejects an invalid storage key before requesting object metadata', async () => {
     await request(app.getHttpServer())
       .post('/api/v1/documents')
-      .send({ storageKey: 'uploads/arbitrary-key', originalFilename: 'report.pdf', mimeType: pdfMimeType, fileSize: 1024 })
+      .send({
+        storageKey: 'uploads/arbitrary-key',
+        originalFilename: 'report.pdf',
+        mimeType: pdfMimeType,
+        fileSize: 1024,
+      })
       .expect(400)
       .expect({ error: { code: 'INVALID_STORAGE_OBJECT' } });
 
@@ -153,7 +163,10 @@ describe('Document create and query endpoints', () => {
   });
 
   it.each([
-    ['an oversized actual object', { contentType: pdfMimeType, contentLength: 20 * 1024 * 1024 + 1 }],
+    [
+      'an oversized actual object',
+      { contentType: pdfMimeType, contentLength: 20 * 1024 * 1024 + 1 },
+    ],
     ['a mismatched actual Content-Type', { contentType: docxMimeType, contentLength: 1024 }],
     ['a mismatched actual size', { contentType: pdfMimeType, contentLength: 1025 }],
   ])('rejects %s', async (_description, metadata) => {
@@ -169,7 +182,12 @@ describe('Document create and query endpoints', () => {
   });
 
   it('is idempotent for repeated requests using the same storage key', async () => {
-    const requestBody = { storageKey, originalFilename: 'report.pdf', mimeType: pdfMimeType, fileSize: 1024 };
+    const requestBody = {
+      storageKey,
+      originalFilename: 'report.pdf',
+      mimeType: pdfMimeType,
+      fileSize: 1024,
+    };
 
     const firstResponse = await request(app.getHttpServer())
       .post('/api/v1/documents')
@@ -187,8 +205,16 @@ describe('Document create and query endpoints', () => {
 
   it('returns newest-first paginated documents without storage keys', async () => {
     records.push(
-      createDocumentRecord('first', 'uploads/11111111-1111-4111-8111-111111111111', '2026-09-07T00:00:00.000Z'),
-      createDocumentRecord('second', 'uploads/22222222-2222-4222-8222-222222222222', '2026-09-08T00:00:00.000Z'),
+      createDocumentRecord(
+        'first',
+        'uploads/11111111-1111-4111-8111-111111111111',
+        '2026-09-07T00:00:00.000Z',
+      ),
+      createDocumentRecord(
+        'second',
+        'uploads/22222222-2222-4222-8222-222222222222',
+        '2026-09-08T00:00:00.000Z',
+      ),
     );
 
     const response = await request(app.getHttpServer())
@@ -232,11 +258,17 @@ describe('Document create and query endpoints', () => {
       .get(`/api/v1/documents/${knownId}`)
       .expect(200);
 
-    expect(response.body).toEqual(expect.objectContaining({ id: knownId, originalName: 'known.pdf' }));
+    expect(response.body).toEqual(
+      expect.objectContaining({ id: knownId, originalName: 'known.pdf' }),
+    );
   });
 });
 
-function createDocumentRecord(id: string, recordStorageKey: string, createdAt: string): DocumentRecord {
+function createDocumentRecord(
+  id: string,
+  recordStorageKey: string,
+  createdAt: string,
+): DocumentRecord {
   const timestamp = new Date(createdAt);
 
   return {

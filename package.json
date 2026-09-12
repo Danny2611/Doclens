@@ -19,12 +19,15 @@
     "dev:worker": "pnpm --filter @doclens/worker --if-present run dev",
     "dev:web": "pnpm --filter @doclens/web --if-present run dev",
     "db:migrate": "pnpm --filter @doclens/database run prisma:deploy",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "lint": "pnpm --recursive --if-present run lint",
     "typecheck": "pnpm --recursive --if-present run typecheck",
     "test": "pnpm --recursive --if-present run test",
     "build": "pnpm --recursive --if-present run build"
   },
   "devDependencies": {
+    "prettier": "3.5.3",
     "typescript": "5.7.3"
   }
 }

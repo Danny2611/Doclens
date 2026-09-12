@@ -32,8 +32,11 @@ export class DocumentsController {
     return this.documentUploadService.createUploadIntent(request);
   }
 
-  @Post(':id/process') @HttpCode(HttpStatus.ACCEPTED)
-  processDocument(@Param('id', new DocumentIdPipe()) id: string): Promise<ProcessDocumentResponse> { return this.documentProcessingRequestService.request(id); }
+  @Post(':id/process')
+  @HttpCode(HttpStatus.ACCEPTED)
+  processDocument(@Param('id', new DocumentIdPipe()) id: string): Promise<ProcessDocumentResponse> {
+    return this.documentProcessingRequestService.request(id);
+  }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)

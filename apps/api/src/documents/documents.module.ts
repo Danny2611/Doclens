@@ -10,7 +10,8 @@ import { ApiQueueModule } from '../queue/api-queue.module';
 import { STORAGE_PROVIDER } from './storage-provider.token';
 
 @Module({
-  imports: [ApiQueueModule], controllers: [DocumentsController],
+  imports: [ApiQueueModule],
+  controllers: [DocumentsController],
   providers: [
     DocumentUploadService,
     DocumentsService,

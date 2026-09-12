@@ -4,13 +4,17 @@ import { z } from 'zod';
 
 import type { CreateUploadIntentRequest } from '@doclens/contracts';
 
-const createUploadIntentRequestSchema = z.object({
-  originalFilename: z.string(),
-  mimeType: z.string(),
-  fileSize: z.number(),
-}).strict();
+const createUploadIntentRequestSchema = z
+  .object({
+    originalFilename: z.string(),
+    mimeType: z.string(),
+    fileSize: z.number(),
+  })
+  .strict();
 
-export class CreateUploadIntentRequestPipe implements PipeTransform<unknown, CreateUploadIntentRequest> {
+export class CreateUploadIntentRequestPipe
+  implements PipeTransform<unknown, CreateUploadIntentRequest>
+{
   transform(value: unknown): CreateUploadIntentRequest {
     const result = createUploadIntentRequestSchema.safeParse(value);
 
