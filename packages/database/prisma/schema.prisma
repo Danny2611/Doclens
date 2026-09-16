@@ -69,6 +69,8 @@ model ProcessingRun {
 
   @@map("processing_runs")
   @@unique([documentId, attempt], map: "processing_runs_document_id_attempt_key")
+  // One active run per document is enforced by raw SQL in the D3-T03 migration.
+  // Prisma cannot declare PostgreSQL partial unique indexes in this schema.
   @@index([documentId, status], map: "processing_runs_document_id_status_idx")
   @@index([status, createdAt], map: "processing_runs_status_created_at_idx")
 }

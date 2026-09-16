@@ -10,5 +10,9 @@ const statuses: Record<string, { label: string; className: string }> = {
 
 export function DocumentStatusBadge({ status }: { status: string }): JSX.Element {
   const value = statuses[status] ?? { label: status, className: 'bg-slate-100 text-slate-800' };
-  return <span className={`rounded-full px-2 py-1 text-xs font-medium ${value.className}`}>{value.label}</span>;
+  return (
+    <span className={`rounded-full px-2 py-1 text-xs font-medium ${value.className}`}>
+      {value.label}
+    </span>
+  );
 }

@@ -10,10 +10,7 @@ import { validateEnvironment } from './env.schema';
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
-      envFilePath: [
-        resolve(process.cwd(), '.env'),
-        resolve(process.cwd(), '../../.env'),
-      ],
+      envFilePath: [resolve(process.cwd(), '.env'), resolve(process.cwd(), '../../.env')],
       load: [configuration],
       validate: validateEnvironment,
     }),

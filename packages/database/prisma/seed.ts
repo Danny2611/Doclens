@@ -1,9 +1,4 @@
-import {
-  DocumentStatus,
-  PrismaClient,
-  ProcessingRunStatus,
-  ProcessingStage,
-} from '@prisma/client';
+import { DocumentStatus, PrismaClient, ProcessingRunStatus, ProcessingStage } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -91,7 +86,9 @@ async function main(): Promise<void> {
     });
   }
 
-  console.log(`Seeded ${seedDocuments.length} documents and ${seedDocuments.length} processing runs.`);
+  console.log(
+    `Seeded ${seedDocuments.length} documents and ${seedDocuments.length} processing runs.`,
+  );
 }
 
 main()

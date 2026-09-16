@@ -30,17 +30,52 @@ export function DocumentLibraryPage(): JSX.Element {
           Nền tảng giúp bạn hiểu tài liệu dài bằng các bản tóm tắt có thể kiểm chứng.
         </p>
         <BackendConnectionStatus />
-        <DocumentUploadForm onSuccess={(document) => {
-          void queryClient.invalidateQueries({ queryKey: documentQueryKeys.all });
-          void navigate(`/documents/${document.id}`);
-        }} />
+        <DocumentUploadForm
+          onSuccess={(document) => {
+            void queryClient.invalidateQueries({ queryKey: documentQueryKeys.all });
+            void navigate(`/documents/${document.id}`);
+          }}
+        />
         <section className="mt-8 border-t border-slate-200 pt-6" aria-labelledby="documents-title">
-          <h2 id="documents-title" className="text-lg font-semibold">Tài liệu</h2>
+          <h2 id="documents-title" className="text-lg font-semibold">
+            Tài liệu
+          </h2>
           {documents.isPending ? <p role="status">Đang tải danh sách tài liệu…</p> : null}
-          {documents.isError ? <p role="alert">Không thể tải danh sách tài liệu. Hãy thử lại.</p> : null}
+          {documents.isError ? (
+            <p role="alert">Không thể tải danh sách tài liệu. Hãy thử lại.</p>
+          ) : null}
           {documents.data?.data.length === 0 ? <p>Chưa có tài liệu nào.</p> : null}
-          {documents.data?.data.length ? <><DocumentList documents={documents.data.data} /><nav className="mt-4 flex items-center gap-2" aria-label="Phân trang"><button className="rounded border px-3 py-1 disabled:opacity-50" type="button" disabled={page <= 1} onClick={() => setPage((current) => current - 1)}>Trước</button><span>Trang {documents.data.pagination.page} / {documents.data.pagination.totalPages}</span><button className="rounded border px-3 py-1 disabled:opacity-50" type="button" disabled={page >= documents.data.pagination.totalPages} onClick={() => setPage((current) => current + 1)}>Sau</button></nav></> : null}
-          {documents.isFetching && documents.data ? <p className="text-sm" role="status">Đang làm mới danh sách…</p> : null}
+          {documents.data?.data.length ? (
+            <>
+              <DocumentList documents={documents.data.data} />
+              <nav className="mt-4 flex items-center gap-2" aria-label="Phân trang">
+                <button
+                  className="rounded border px-3 py-1 disabled:opacity-50"
+                  type="button"
+                  disabled={page <= 1}
+                  onClick={() => setPage((current) => current - 1)}
+                >
+                  Trước
+                </button>
+                <span>
+                  Trang {documents.data.pagination.page} / {documents.data.pagination.totalPages}
+                </span>
+                <button
+                  className="rounded border px-3 py-1 disabled:opacity-50"
+                  type="button"
+                  disabled={page >= documents.data.pagination.totalPages}
+                  onClick={() => setPage((current) => current + 1)}
+                >
+                  Sau
+                </button>
+              </nav>
+            </>
+          ) : null}
+          {documents.isFetching && documents.data ? (
+            <p className="text-sm" role="status">
+              Đang làm mới danh sách…
+            </p>
+          ) : null}
         </section>
       </section>
     </main>

@@ -60,7 +60,9 @@ describe('WorkerDependenciesService', () => {
   });
 
   it('fails clearly and cleans up when PostgreSQL is unavailable', async () => {
-    const { service, prisma, redis } = createService({ postgresError: new Error('connection refused') });
+    const { service, prisma, redis } = createService({
+      postgresError: new Error('connection refused'),
+    });
 
     await expect(service.onApplicationBootstrap()).rejects.toThrow(
       'Worker startup failed: PostgreSQL is unavailable.',
@@ -71,7 +73,9 @@ describe('WorkerDependenciesService', () => {
   });
 
   it('fails clearly and cleans up when Redis is unavailable', async () => {
-    const { service, prisma, redis } = createService({ redisError: new Error('connection refused') });
+    const { service, prisma, redis } = createService({
+      redisError: new Error('connection refused'),
+    });
 
     await expect(service.onApplicationBootstrap()).rejects.toThrow(
       'Worker startup failed: Redis is unavailable.',

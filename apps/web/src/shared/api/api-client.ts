@@ -12,7 +12,11 @@ export type HealthResponse = {
 };
 
 export class ApiClientError extends Error {
-  constructor(message: string, readonly code?: string, readonly status?: number) {
+  constructor(
+    message: string,
+    readonly code?: string,
+    readonly status?: number,
+  ) {
     super(message);
   }
 }
@@ -68,13 +72,19 @@ function isDocumentResponse(value: unknown): value is DocumentResponse {
 function isDocumentListResponse(value: unknown): value is DocumentListResponse {
   if (!value || typeof value !== 'object') return false;
   const response = value as Record<string, unknown>;
-  return Array.isArray(response.data) && !!response.pagination && typeof response.pagination === 'object';
+  return (
+    Array.isArray(response.data) && !!response.pagination && typeof response.pagination === 'object'
+  );
 }
 
 async function getErrorCode(response: Response): Promise<string | undefined> {
   try {
     const body: unknown = await response.json();
-    if (body && typeof body === 'object' && typeof (body as Record<string, unknown>).code === 'string') {
+    if (
+      body &&
+      typeof body === 'object' &&
+      typeof (body as Record<string, unknown>).code === 'string'
+    ) {
       return (body as Record<string, string>).code;
     }
   } catch {
@@ -111,8 +121,14 @@ export function createApiClient({
       return payload;
     },
 
-    async createUploadIntent(request: CreateUploadIntentRequest): Promise<CreateUploadIntentResponse> {
-      const response = await requestJson(`${baseUrl}/documents/upload-url`, request, fetchImplementation);
+    async createUploadIntent(
+      request: CreateUploadIntentRequest,
+    ): Promise<CreateUploadIntentResponse> {
+      const response = await requestJson(
+        `${baseUrl}/documents/upload-url`,
+        request,
+        fetchImplementation,
+      );
       const payload: unknown = await response.json();
       if (!isUploadIntentResponse(payload)) {
         throw new ApiClientError('The DocLens API returned an invalid upload intent response.');
@@ -130,16 +146,24 @@ export function createApiClient({
     },
 
     async listDocuments(page = 1, limit = 20): Promise<DocumentListResponse> {
-      const response = await requestGet(`${baseUrl}/documents?page=${page}&limit=${limit}`, fetchImplementation);
+      const response = await requestGet(
+        `${baseUrl}/documents?page=${page}&limit=${limit}`,
+        fetchImplementation,
+      );
       const payload: unknown = await response.json();
-      if (!isDocumentListResponse(payload)) throw new ApiClientError('The DocLens API returned an invalid document list response.');
+      if (!isDocumentListResponse(payload))
+        throw new ApiClientError('The DocLens API returned an invalid document list response.');
       return payload;
     },
 
     async getDocument(id: string): Promise<DocumentResponse> {
-      const response = await requestGet(`${baseUrl}/documents/${encodeURIComponent(id)}`, fetchImplementation);
+      const response = await requestGet(
+        `${baseUrl}/documents/${encodeURIComponent(id)}`,
+        fetchImplementation,
+      );
       const payload: unknown = await response.json();
-      if (!isDocumentResponse(payload)) throw new ApiClientError('The DocLens API returned an invalid document response.');
+      if (!isDocumentResponse(payload))
+        throw new ApiClientError('The DocLens API returned an invalid document response.');
       return payload;
     },
   };
@@ -163,19 +187,31 @@ async function requestJson(
     throw new ApiClientError('Unable to connect to the DocLens API.');
   }
   if (!response.ok) {
-    throw new ApiClientError(`The DocLens API returned HTTP ${response.status}.`, await getErrorCode(response), response.status);
+    throw new ApiClientError(
+      `The DocLens API returned HTTP ${response.status}.`,
+      await getErrorCode(response),
+      response.status,
+    );
   }
   return response;
 }
 
-async function requestGet(url: string, fetchImplementation: FetchImplementation): Promise<Response> {
+async function requestGet(
+  url: string,
+  fetchImplementation: FetchImplementation,
+): Promise<Response> {
   let response: Response;
   try {
     response = await fetchImplementation(url, { headers: { Accept: 'application/json' } });
   } catch {
     throw new ApiClientError('Unable to connect to the DocLens API.');
   }
-  if (!response.ok) throw new ApiClientError(`The DocLens API returned HTTP ${response.status}.`, await getErrorCode(response), response.status);
+  if (!response.ok)
+    throw new ApiClientError(
+      `The DocLens API returned HTTP ${response.status}.`,
+      await getErrorCode(response),
+      response.status,
+    );
   return response;
 }
 

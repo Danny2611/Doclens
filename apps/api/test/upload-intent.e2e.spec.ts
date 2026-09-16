@@ -80,15 +80,31 @@ describe('POST /api/v1/documents/upload-url', () => {
   });
 
   it.each([
-    ['empty file', { originalFilename: 'report.pdf', mimeType: pdfMimeType, fileSize: 0 }, 'EMPTY_FILE'],
+    [
+      'empty file',
+      { originalFilename: 'report.pdf', mimeType: pdfMimeType, fileSize: 0 },
+      'EMPTY_FILE',
+    ],
     [
       'file larger than 20 MiB',
       { originalFilename: 'report.pdf', mimeType: pdfMimeType, fileSize: 20 * 1024 * 1024 + 1 },
       'FILE_TOO_LARGE',
     ],
-    ['unsupported extension', { originalFilename: 'report.doc', mimeType: 'application/msword', fileSize: 1 }, 'UNSUPPORTED_FILE_EXTENSION'],
-    ['unsupported MIME type', { originalFilename: 'report.pdf', mimeType: 'text/plain', fileSize: 1 }, 'UNSUPPORTED_MIME_TYPE'],
-    ['extension and MIME type mismatch', { originalFilename: 'report.pdf', mimeType: docxMimeType, fileSize: 1 }, 'DOCUMENT_TYPE_MISMATCH'],
+    [
+      'unsupported extension',
+      { originalFilename: 'report.doc', mimeType: 'application/msword', fileSize: 1 },
+      'UNSUPPORTED_FILE_EXTENSION',
+    ],
+    [
+      'unsupported MIME type',
+      { originalFilename: 'report.pdf', mimeType: 'text/plain', fileSize: 1 },
+      'UNSUPPORTED_MIME_TYPE',
+    ],
+    [
+      'extension and MIME type mismatch',
+      { originalFilename: 'report.pdf', mimeType: docxMimeType, fileSize: 1 },
+      'DOCUMENT_TYPE_MISMATCH',
+    ],
   ])('rejects %s with a stable error code', async (_description, body, code) => {
     await request(app.getHttpServer())
       .post('/api/v1/documents/upload-url')

@@ -59,9 +59,9 @@ describe('S3StorageProvider', () => {
   it('maps signing failures without exposing SDK details or credentials', async () => {
     const provider = new S3StorageProvider(storageConfig, {
       client: new S3Client({ region: 'us-east-1' }),
-      presignPutObjectUrl: jest.fn().mockRejectedValue(
-        new Error('doclensminio_local_password should not escape'),
-      ),
+      presignPutObjectUrl: jest
+        .fn()
+        .mockRejectedValue(new Error('doclensminio_local_password should not escape')),
     });
 
     await expect(
@@ -99,11 +99,12 @@ describe('S3StorageProvider', () => {
       client: { send } as unknown as S3Client,
     });
 
-    await expect(provider.getObjectMetadata({ objectKey: 'uploads/8f5e987f-2860-438e-bb28-e64f05c9f75e' }))
-      .resolves.toEqual({
-        contentType: 'application/pdf',
-        contentLength: 1024,
-      });
+    await expect(
+      provider.getObjectMetadata({ objectKey: 'uploads/8f5e987f-2860-438e-bb28-e64f05c9f75e' }),
+    ).resolves.toEqual({
+      contentType: 'application/pdf',
+      contentLength: 1024,
+    });
 
     expect(send).toHaveBeenCalledWith(expect.any(HeadObjectCommand));
     const command = send.mock.calls[0]?.[0] as HeadObjectCommand;
@@ -120,10 +121,11 @@ describe('S3StorageProvider', () => {
       } as unknown as S3Client,
     });
 
-    await expect(provider.getObjectMetadata({ objectKey: 'uploads/8f5e987f-2860-438e-bb28-e64f05c9f75e' }))
-      .rejects.toEqual(
-        new StorageError(StorageErrorCode.OBJECT_NOT_FOUND, 'The storage object was not found.'),
-      );
+    await expect(
+      provider.getObjectMetadata({ objectKey: 'uploads/8f5e987f-2860-438e-bb28-e64f05c9f75e' }),
+    ).rejects.toEqual(
+      new StorageError(StorageErrorCode.OBJECT_NOT_FOUND, 'The storage object was not found.'),
+    );
   });
 
   it('maps metadata lookup failures without exposing SDK details', async () => {
@@ -133,12 +135,13 @@ describe('S3StorageProvider', () => {
       } as unknown as S3Client,
     });
 
-    await expect(provider.getObjectMetadata({ objectKey: 'uploads/8f5e987f-2860-438e-bb28-e64f05c9f75e' }))
-      .rejects.toEqual(
-        new StorageError(
-          StorageErrorCode.OBJECT_METADATA_LOOKUP_FAILED,
-          'Unable to retrieve storage object metadata.',
-        ),
-      );
+    await expect(
+      provider.getObjectMetadata({ objectKey: 'uploads/8f5e987f-2860-438e-bb28-e64f05c9f75e' }),
+    ).rejects.toEqual(
+      new StorageError(
+        StorageErrorCode.OBJECT_METADATA_LOOKUP_FAILED,
+        'Unable to retrieve storage object metadata.',
+      ),
+    );
   });
 });

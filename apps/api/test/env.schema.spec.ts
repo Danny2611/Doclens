@@ -29,7 +29,8 @@ describe('validateEnvironment', () => {
   });
 
   it('fails fast with a safe message when storage configuration is invalid', () => {
-    expect(() => validateEnvironment({ ...validStorageEnvironment, S3_ENDPOINT: 'not-a-url' }))
-      .toThrow('Invalid API environment configuration: storage configuration is invalid.');
+    expect(() =>
+      validateEnvironment({ ...validStorageEnvironment, S3_ENDPOINT: 'not-a-url' }),
+    ).toThrow('Invalid API environment configuration: storage configuration is invalid.');
   });
 });

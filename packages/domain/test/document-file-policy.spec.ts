@@ -48,7 +48,11 @@ describe('validateDocumentFileMetadata', () => {
     },
     {
       name: 'a non-finite file size',
-      metadata: { originalFilename: 'invalid.pdf', mimeType: 'application/pdf', fileSize: Number.NaN },
+      metadata: {
+        originalFilename: 'invalid.pdf',
+        mimeType: 'application/pdf',
+        fileSize: Number.NaN,
+      },
       code: UploadErrorCode.INVALID_FILE_SIZE,
     },
     {

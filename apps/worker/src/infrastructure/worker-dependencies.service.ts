@@ -33,10 +33,14 @@ export class WorkerDependenciesService implements OnApplicationBootstrap, OnAppl
 
   private async connectPostgreSQL(): Promise<void> {
     try {
-      await withStartupTimeout(async () => {
-        await this.prisma.$connect();
-        await this.prisma.$queryRaw`SELECT 1`;
-      }, this.startupTimeoutMs, 'PostgreSQL');
+      await withStartupTimeout(
+        async () => {
+          await this.prisma.$connect();
+          await this.prisma.$queryRaw`SELECT 1`;
+        },
+        this.startupTimeoutMs,
+        'PostgreSQL',
+      );
     } catch {
       throw new Error('Worker startup failed: PostgreSQL is unavailable.');
     }
@@ -44,10 +48,14 @@ export class WorkerDependenciesService implements OnApplicationBootstrap, OnAppl
 
   private async connectRedis(): Promise<void> {
     try {
-      await withStartupTimeout(async () => {
-        await this.redis.connect();
-        await this.redis.ping();
-      }, this.startupTimeoutMs, 'Redis');
+      await withStartupTimeout(
+        async () => {
+          await this.redis.connect();
+          await this.redis.ping();
+        },
+        this.startupTimeoutMs,
+        'Redis',
+      );
     } catch {
       throw new Error('Worker startup failed: Redis is unavailable.');
     }

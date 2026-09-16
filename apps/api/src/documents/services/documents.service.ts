@@ -19,7 +19,8 @@ import type { ListDocumentsQuery } from '../dto/list-documents.query';
 import { presentDocument } from '../presenters/document.presenter';
 import { STORAGE_PROVIDER } from '../storage-provider.token';
 
-const SERVER_GENERATED_STORAGE_KEY = /^uploads\/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+const SERVER_GENERATED_STORAGE_KEY =
+  /^uploads\/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 
 @Injectable()
 export class DocumentsService {
@@ -159,9 +160,11 @@ export class DocumentsService {
       fileSize: actualMetadata.contentLength ?? Number.NaN,
     });
 
-    if (!actualValidation.ok
-      || actualMetadata.contentType !== request.mimeType
-      || actualMetadata.contentLength !== request.fileSize) {
+    if (
+      !actualValidation.ok ||
+      actualMetadata.contentType !== request.mimeType ||
+      actualMetadata.contentLength !== request.fileSize
+    ) {
       throw new BadRequestException({
         error: {
           code: DocumentErrorCode.INVALID_STORAGE_OBJECT,
@@ -186,10 +189,7 @@ export class DocumentsService {
 }
 
 function isUniqueStorageKeyViolation(error: unknown): boolean {
-  return typeof error === 'object'
-    && error !== null
-    && 'code' in error
-    && error.code === 'P2002';
+  return typeof error === 'object' && error !== null && 'code' in error && error.code === 'P2002';
 }
 
 function databaseUnavailable(): ServiceUnavailableException {

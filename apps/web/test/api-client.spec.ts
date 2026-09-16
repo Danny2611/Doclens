@@ -4,9 +4,11 @@ import { ApiClientError, createApiClient } from '../src/shared/api/api-client';
 
 describe('API client', () => {
   it('requests the documented health endpoint', async () => {
-    const fetchImplementation = vi.fn().mockResolvedValue(
-      new Response(JSON.stringify({ status: 'ok', service: 'api' }), { status: 200 }),
-    );
+    const fetchImplementation = vi
+      .fn()
+      .mockResolvedValue(
+        new Response(JSON.stringify({ status: 'ok', service: 'api' }), { status: 200 }),
+      );
     const client = createApiClient({
       baseUrl: 'http://localhost:3000/api/v1',
       fetchImplementation,

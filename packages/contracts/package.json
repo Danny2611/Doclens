@@ -10,7 +10,9 @@
       "require": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
     "typecheck": "tsc --project tsconfig.json",
@@ -19,7 +21,8 @@
     "build": "tsc --project tsconfig.build.json"
   },
   "dependencies": {
-    "@doclens/domain": "workspace:*"
+    "@doclens/domain": "workspace:*",
+    "zod": "3.24.2"
   },
   "devDependencies": {
     "@eslint/js": "9.21.0",

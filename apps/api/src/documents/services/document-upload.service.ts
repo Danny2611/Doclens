@@ -1,8 +1,10 @@
-import { BadRequestException, Inject, Injectable, ServiceUnavailableException } from '@nestjs/common';
-import type {
-  CreateUploadIntentRequest,
-  CreateUploadIntentResponse,
-} from '@doclens/contracts';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  ServiceUnavailableException,
+} from '@nestjs/common';
+import type { CreateUploadIntentRequest, CreateUploadIntentResponse } from '@doclens/contracts';
 import { validateDocumentFileMetadata } from '@doclens/domain';
 import { StorageErrorCode, type StorageProvider } from '@doclens/storage';
 import { randomUUID } from 'node:crypto';

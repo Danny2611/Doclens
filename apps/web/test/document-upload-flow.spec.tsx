@@ -34,8 +34,11 @@ describe('DocumentUploadForm', () => {
     const put = vi.fn().mockResolvedValue(new Response(null, { status: 200 }));
     vi.stubGlobal('fetch', put);
     createUploadIntent.mockResolvedValue({
-      uploadUrl: 'https://example.test/signed-upload', storageKey: 'uploads/test.pdf', method: 'PUT',
-      expiresAt: '2026-09-08T00:00:00.000Z', requiredHeaders: { 'content-type': 'application/pdf' },
+      uploadUrl: 'https://example.test/signed-upload',
+      storageKey: 'uploads/test.pdf',
+      method: 'PUT',
+      expiresAt: '2026-09-08T00:00:00.000Z',
+      requiredHeaders: { 'content-type': 'application/pdf' },
     });
     createDocument.mockResolvedValue({ id: 'document-1', originalName: 'test.pdf' });
     render(<DocumentUploadForm />);
@@ -43,20 +46,35 @@ describe('DocumentUploadForm', () => {
     fireEvent.change(screen.getByLabelText('Chọn tệp'), { target: { files: [file] } });
     fireEvent.click(screen.getByRole('button', { name: 'Tải tài liệu' }));
 
-    await waitFor(() => expect(createDocument).toHaveBeenCalledWith({
-      storageKey: 'uploads/test.pdf', originalFilename: 'test.pdf', mimeType: 'application/pdf', fileSize: 3,
-    }));
+    await waitFor(() =>
+      expect(createDocument).toHaveBeenCalledWith({
+        storageKey: 'uploads/test.pdf',
+        originalFilename: 'test.pdf',
+        mimeType: 'application/pdf',
+        fileSize: 3,
+      }),
+    );
     expect(put).toHaveBeenCalledWith('https://example.test/signed-upload', {
-      method: 'PUT', headers: { 'content-type': 'application/pdf' }, body: file,
+      method: 'PUT',
+      headers: { 'content-type': 'application/pdf' },
+      body: file,
     });
     expect(await screen.findByText('Đã tạo tài liệu: test.pdf.')).toBeInTheDocument();
   });
 
   it('does not create a document when PUT fails', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(null, { status: 403 })));
-    createUploadIntent.mockResolvedValue({ uploadUrl: 'https://example.test/signed-upload', storageKey: 'uploads/test.pdf', method: 'PUT', expiresAt: '2026-09-08T00:00:00.000Z', requiredHeaders: { 'content-type': 'application/pdf' } });
+    createUploadIntent.mockResolvedValue({
+      uploadUrl: 'https://example.test/signed-upload',
+      storageKey: 'uploads/test.pdf',
+      method: 'PUT',
+      expiresAt: '2026-09-08T00:00:00.000Z',
+      requiredHeaders: { 'content-type': 'application/pdf' },
+    });
     render(<DocumentUploadForm />);
-    fireEvent.change(screen.getByLabelText('Chọn tệp'), { target: { files: [new File(['pdf'], 'test.pdf', { type: 'application/pdf' })] } });
+    fireEvent.change(screen.getByLabelText('Chọn tệp'), {
+      target: { files: [new File(['pdf'], 'test.pdf', { type: 'application/pdf' })] },
+    });
     fireEvent.click(screen.getByRole('button', { name: 'Tải tài liệu' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('HTTP 403');
     expect(createDocument).not.toHaveBeenCalled();

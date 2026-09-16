@@ -73,10 +73,12 @@ export class S3StorageProvider implements StorageProvider {
     validateObjectKey(input.objectKey);
 
     try {
-      const output = await this.client.send(new HeadObjectCommand({
-        Bucket: this.config.bucket,
-        Key: input.objectKey,
-      }));
+      const output = await this.client.send(
+        new HeadObjectCommand({
+          Bucket: this.config.bucket,
+          Key: input.objectKey,
+        }),
+      );
 
       return {
         contentType: output.ContentType,
@@ -116,10 +118,7 @@ export function createS3Client(config: S3StorageConfig): S3Client {
 
 function validateUploadInput(input: CreatePresignedUploadInput): void {
   if (input.contentType.trim() === '') {
-    throw new StorageError(
-      StorageErrorCode.INVALID_UPLOAD_INPUT,
-      'Upload input is invalid.',
-    );
+    throw new StorageError(StorageErrorCode.INVALID_UPLOAD_INPUT, 'Upload input is invalid.');
   }
 
   validateObjectKey(input.objectKey);
@@ -127,10 +126,7 @@ function validateUploadInput(input: CreatePresignedUploadInput): void {
 
 function validateObjectKey(objectKey: string): void {
   if (objectKey.trim() === '') {
-    throw new StorageError(
-      StorageErrorCode.INVALID_UPLOAD_INPUT,
-      'Upload input is invalid.',
-    );
+    throw new StorageError(StorageErrorCode.INVALID_UPLOAD_INPUT, 'Upload input is invalid.');
   }
 }
 
